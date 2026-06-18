@@ -9,7 +9,8 @@ else
 fi
 
 # Activates the venv
-source CIRRUS_venv/bin/activate
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+.\CIRRUS_venv\Scripts\Activate.ps1
 
 # Upgrade pip and install dependencies
 echo "Installing dependencies..."

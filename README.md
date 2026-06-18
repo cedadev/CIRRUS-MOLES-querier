@@ -9,7 +9,7 @@ source setup-env.sh
 
 ### windows
 ```shell
-. setup-env.sh
+. \setup-env.ps1
 ```
 
 
