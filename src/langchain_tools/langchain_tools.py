@@ -39,7 +39,7 @@ def get_record_tool(UUID=None, URL=None, session_number=None):
 
 @langchain_tool
 def search_redirect_tool(query=None):
-    """Use this tool if a direct search fails or if a user provides an old or ambiguous query that needs resolving.
+    """Use this tool if a direct search fails or if a user provides an old, ambiguous or out of scope (such as help pages) query that needs resolving.
     This will search the custom Google search engine across all CEDA searches. (this will return an external link)
 
     Args:
