@@ -1,0 +1,6 @@
+Host-type:
+  host: "JASMIN"
+
+LLM-type:
+  JASMIN_LLM: "llama3.3"
+  LOCAL_LLM: 

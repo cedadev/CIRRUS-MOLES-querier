@@ -1,3 +1,5 @@
+import yaml
+
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_classic.agents import create_tool_calling_agent, AgentExecutor
 from langchain_ollama import ChatOllama
@@ -9,11 +11,23 @@ from langchain_tools.langchain_tools import (
     search_redirect_tool,
 )
 
+# Load model from config
+with open("etc/config.yml", "r") as f:
+    config = yaml.safe_load(f)
+
+host_type = config["Host-type"]["host"]
+
+if host_type == "JASMIN":
+    model = config["LLM-type"]["JASMIN_LLM"]
+else:
+    model = config["LLM-type"]["LOCAL_LLM"]
+print(f"loaded {model}")
+
 # set up tools
 tools = [search_catalogue_tool, get_record_tool, search_redirect_tool]
 
-# llm = ChatOllama(model="llama3.1:8b-instruct-q8_0")
-llm = ChatOllama(model="qwen3:14b")
+llm = ChatOllama(model=model)
+
 system_prompt = """
 You are CIRRUS.
 Your persona is helpful, informative, but not overly friendly.
@@ -43,6 +57,7 @@ Format your response like this:
 (main text)
 (list of output URLs if any)
 """
+
 # prompt template with placeholders (agent_scratchpad is important for tool calling)
 prompt = ChatPromptTemplate.from_messages(
     [
