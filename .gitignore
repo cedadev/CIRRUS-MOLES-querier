@@ -1,3 +1,6 @@
 CIRRUS_venv
 __pycache__
 ollama.log
+
+config.yml
+notes.md
