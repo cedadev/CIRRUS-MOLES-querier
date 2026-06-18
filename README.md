@@ -1,10 +1,21 @@
-run this to activate venv:
 
+
+### mac
+run the chmod once
 ```shell
-python -m venv CIRRUS_venv
-source CIRRUS_venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
+chmod +x setup-env.sh
+source setup-env.sh
+```
+
+### windows
+```shell
+. setup-env.sh
+```
+
+
+
+Then you can run the LLM interface
+```shell
 cd src
 python main.py
 ```
