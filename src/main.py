@@ -2,23 +2,56 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_classic.agents import create_tool_calling_agent, AgentExecutor
 from langchain_ollama import ChatOllama
 from langchain.messages import HumanMessage, AIMessage
-#from langchain_tool import get_record_from_uuid
+
+from langchain_tools.langchain_tools import (
+    search_catalogue_tool,
+    get_record_tool,
+    search_redirect_tool,
+)
 
 # set up tools
-#tools = [get_record_from_uuid]
-tools = []
+tools = [search_catalogue_tool, get_record_tool, search_redirect_tool]
 
-#llm = ChatOllama(model="llama3.1:8b-instruct-q8_0")
+# llm = ChatOllama(model="llama3.1:8b-instruct-q8_0")
 llm = ChatOllama(model="qwen3:14b")
-system_prompt = "You are a helpful assistant you have access to tools, but should only use them if prompted. If I say 'banana' anywhere, you will respond with: 'MONKEY!!'"
+system_prompt = """
+You are CIRRUS.
+Your persona is helpful, informative, but not overly friendly.
+CIRRUS helps users discover datasets and metadata stored within the CEDA catalogue.
+You are not a scientific analysis assistant.
+You do not analyse dataset contents.
+You do not answer questions requiring access to actual data values.
+Whenever catalogue_url is present, include it in your response.
 
+Tool Usage Rules
+Always use tools for catalogue information.
+Never invent datasets.
+Never assume a dataset exists.
+Only rely on tool outputs for catalogue information.
+ONLY RESPOND WITH WHAT A TOOL GIVES YOU. DO NOT USE ANY OF YOUR OWN KNOWLEDGE OR ASSUMPTIONS.
+If information is unavailable, say so and ask for more information if required.
+
+Redirect Rules
+If a question cannot be answered from catalogue metadata:
+1. Explain why.
+2. Call the redirect tool with a suitable google search term
+3. Do not attempt to guess an answer.
+
+Response Display
+DO NOT FABRICATE RESPONSES, IF A TOOL RETURNS NO RESULTS, SAY SO.
+Format your response like this:
+(main text)
+(list of output URLs if any)
+"""
 # prompt template with placeholders (agent_scratchpad is important for tool calling)
-prompt = ChatPromptTemplate.from_messages([
-    ("system", system_prompt),
-    MessagesPlaceholder(variable_name="chat_history"),
-    ("user", "{input}"),
-    MessagesPlaceholder(variable_name="agent_scratchpad"),
-])
+prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", system_prompt),
+        MessagesPlaceholder(variable_name="chat_history"),
+        ("user", "{input}"),
+        MessagesPlaceholder(variable_name="agent_scratchpad"),
+    ]
+)
 
 agent = create_tool_calling_agent(llm, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
@@ -27,17 +60,15 @@ agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
 history = []
 
 while True:
-    user_input = input("\n--------------------\n\nEnter your query (or 'exit' to quit): ")
-    if user_input.lower() in ['exit', 'quit']:
+    user_input = input(
+        "\n--------------------\n\nEnter your query (or 'exit' to quit): "
+    )
+    if user_input.lower() in ["exit", "quit"]:
         print("Exiting agent interaction.")
         break
-    
-    
+
     try:
-        response = agent_executor.invoke({
-            "input": user_input,
-            "chat_history": history
-        })
+        response = agent_executor.invoke({"input": user_input, "chat_history": history})
         # Add messages to history
         history.append(HumanMessage(content=user_input))
         history.append(AIMessage(content=response["output"]))
