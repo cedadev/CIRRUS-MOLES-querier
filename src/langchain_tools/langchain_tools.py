@@ -24,23 +24,32 @@ def search_catalogue_tool(
 
 
 @langchain_tool
-def get_record_tool(UUID=None, URL=None, session_number=None):
-    """Retrieves full, detailed information for a specific MOLES record using an identifier.
-    Use this tool when you already have a unique identifier (like a UUID or URL) for a record.
+def get_record_tool(UUID: str = None, URL: str = None) -> dict:
+    """
+    Get the complete metadata record for a CEDA catalogue entry.
 
-    Args:
-        UUID (str, optional): The unique identifier (UUID) of the record to retrieve.
-        URL (str, optional): The direct URL of the metadata record.
-        session_number (int, optional): An optional session identifier if tracking historical states.
+    Use this tool when the user provides a record UUID, a catalogue URL or wants more information about a dataset returned by another tool and
+    wants detailed information about that specific record. The tool identifies
+    the record type automatically and returns all available metadata fields.
+    This tool excludes all top level values that are null, "" or [] (null, empty or empty lists), if a user asks about something that was not found in the returned record, assume it was one of the removed values.
+
+    The input values are both optional, however, one of them must be filled. If both are filled, the UUID field only will be used
+
+    Inputs:
+        UUID (str, optional): Record UUID.
+        URL (str, optional): Catalogue URL containing the UUID.
+
+    Output:
+        A dictionary of detailed record metadata.
     """
 
-    return get_record(UUID, URL, session_number)
+    return get_record(UUID, URL)
 
 
 @langchain_tool
 def search_redirect_tool(query: str) -> str:
     """
-    Creates a Google Custom Search link for a user query.
+    Create a Google Custom Search link for a user query.
 
     This tool does not perform a search. It only generates a URL that the
     user can open to view search results. Use this tool if a direct search fails or if a user provides an old, ambiguous or out of scope (such as help pages) query that needs resolving.
