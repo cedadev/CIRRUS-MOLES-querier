@@ -38,12 +38,19 @@ def get_record_tool(UUID=None, URL=None, session_number=None):
 
 
 @langchain_tool
-def search_redirect_tool(query=None):
-    """Use this tool if a direct search fails or if a user provides an old, ambiguous or out of scope (such as help pages) query that needs resolving.
-    This will search the custom Google search engine across all CEDA searches. (this will return an external link)
+def search_redirect_tool(query: str) -> str:
+    """
+    Creates a Google Custom Search link for a user query.
 
-    Args:
-        query (str, optional): The raw search query or legacy string to check for redirects.
+    This tool does not perform a search. It only generates a URL that the
+    user can open to view search results. Use this tool if a direct search fails or if a user provides an old, ambiguous or out of scope (such as help pages) query that needs resolving.
+    This will search the custom Google search engine across all CEDA searches.
+
+    Input:
+        A natural-language search query.
+
+    Output:
+        A valid Google Custom Search URL as a string.
     """
 
     return search_redirect(query)
