@@ -1,4 +1,4 @@
-from common import call_api, check_link, API_TYPES
+from .common import call_api, check_link, API_TYPES
 
 STRIP_FIELDS = {
     "phenomena",
