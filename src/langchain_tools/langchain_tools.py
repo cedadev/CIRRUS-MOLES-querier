@@ -70,7 +70,27 @@ def search_catalogue_tool(
         linking directly to the CEDA catalogue page.
     """
 
-    return search_catalogue(object_type, title, abstract, keywords, path, creationDate, lastUpdatedDate, updateFrequency, dataLineage, publicationState, status, doiPublishedTime, instrumentType, platformType, timePeriodStart, timePeriodEnd, oldDataPath, page, **kwargs)
+    return search_catalogue(
+        object_type,
+        title,
+        abstract,
+        keywords,
+        path,
+        creationDate,
+        lastUpdatedDate,
+        updateFrequency,
+        dataLineage,
+        publicationState,
+        status,
+        doiPublishedTime,
+        instrumentType,
+        platformType,
+        timePeriodStart,
+        timePeriodEnd,
+        oldDataPath,
+        page,
+        **kwargs
+    )
 
 
 @langchain_tool
@@ -104,7 +124,7 @@ def search_redirect_tool(query: str) -> str:
     This tool does not perform a search. It only generates a URL that the
     user can open to view search results. Use this tool if a direct search fails or if a user provides an old, ambiguous or out of scope (such as help pages) query that needs resolving.
     This will search the custom Google search engine across all CEDA searches.
-    
+
     You should also give a brief explanation for why you are redirecting the user.
 
     Input:
