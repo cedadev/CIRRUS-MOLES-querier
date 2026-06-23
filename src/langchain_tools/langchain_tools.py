@@ -6,8 +6,26 @@ from tool_functionality.search_redirect import search_redirect
 
 @langchain_tool
 def search_catalogue_tool(
-    object_type=None, keywords=None, path=None, page=None, etc=None
-):
+    object_type: str,
+    title: str = None,
+    abstract: str = None,
+    keywords: str = None,
+    path: str = None,
+    creationDate: str = None,
+    lastUpdatedDate: str = None,
+    updateFrequency: str = None,
+    dataLineage: str = None,
+    publicationState: str = None,
+    status: str = None,
+    doiPublishedTime: str = None,
+    instrumentType: str = None,
+    platformType: str = None,
+    timePeriodStart: str = None,
+    timePeriodEnd: str = None,
+    oldDataPath: list = None,
+    page: int = 1,
+    **kwargs
+) -> dict:
     """Searches the MOLES catalogue using filters like keywords, object type and path.
     Use this tool when the user is looking for information. The responses are paginated, showing only up to the first 10 responses Which can be iterated through using page.
     observations (datasets), observation collections, computations, instruments, projects and platforms.
@@ -45,13 +63,14 @@ def search_catalogue_tool(
         doiPublishedTime (str, optional): when a DOI was published (e.g., '2022-07-22'). This may be a null value for many records if they don't have a DOI
         oldDataPath (list, optional): a list type with a number in. Very few records have this value
         page (int, optional): The page number for pagination. Defaults to 1.
+        kwargs (dict, optional): Additional catch-all search parameters.
 
     Returns:
         dict: A dictionary containing the paginated and filtered API response with the full number of records as metadata with a verified url_list
         linking directly to the CEDA catalogue page.
     """
 
-    return search_catalogue(object_type, keywords, path, page, etc)
+    return search_catalogue(object_type, title, abstract, keywords, path, creationDate, lastUpdatedDate, updateFrequency, dataLineage, publicationState, status, doiPublishedTime, instrumentType, platformType, timePeriodStart, timePeriodEnd, oldDataPath, page, **kwargs)
 
 
 @langchain_tool
