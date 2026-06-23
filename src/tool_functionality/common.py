@@ -19,7 +19,7 @@ def call_api(params: dict, api_type: str, page: int = 1) -> dict:
 
     try:
         response = requests.get(
-            OBSERVATION_API_URL+api_type,
+            OBSERVATION_API_URL + api_type,
             params=paginated_params,
             timeout=15,
         )
@@ -57,5 +57,5 @@ API_TYPES = {
     "instr": "instruments",
     "proj": "projects",
     "plat": "platforms",
-    "coll": "observationcollections"
+    "coll": "observationcollections",
 }
