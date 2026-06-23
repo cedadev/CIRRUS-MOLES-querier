@@ -48,7 +48,7 @@ def search_catalogue_tool(
             'observations', 'computations', 'instruments', 'projects', 'platforms', 'observationcollections'.
         title (str, optional): Case-insensitive partial match string for the title.
         abstract (str, optional): Case-insensitive partial match string for the summary/abstract.
-        keywords (str, optional): Keywords or tags associated with the dataset.
+        keywords (str, optional): Keywords or tags associated with the dataset. This is a specific keyword search, for searching for substrings, use the title or abstract
         path (str, optional): The directory or catalogue path prefix (e.g., '/neodc/sister).
         creationDate (str, optional): Date the record was created (e.g., '2022-07-22').
         lastUpdatedDate (str, optional): Date the record was last modified.
@@ -104,6 +104,8 @@ def search_redirect_tool(query: str) -> str:
     This tool does not perform a search. It only generates a URL that the
     user can open to view search results. Use this tool if a direct search fails or if a user provides an old, ambiguous or out of scope (such as help pages) query that needs resolving.
     This will search the custom Google search engine across all CEDA searches.
+    
+    You should also give a brief explanation for why you are redirecting the user.
 
     Input:
         A natural-language search query.
