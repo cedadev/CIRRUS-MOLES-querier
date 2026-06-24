@@ -1,65 +1,103 @@
-from tool_functionality.search_catalogue import search_catalogue
+from tool_functionality.search_catalogue import search_catalogue, get_object_type
 
 
-"""
-get_object_type:
+def test_type_key_match():
+    response = get_object_type("coll")
+    assert response == "observationcollections"
 
-direct key match
-direct value match
-substring match
-no match
+def test_type_value_match():
+    response = get_object_type("computations")
+    assert response == "computations"
 
+def test_type_substring_match():
+    response = get_object_type("pro")
+    assert response == "projects"
 
-search_catalogue:
-
-runs successfully (including url_list)
-invalid object type
-malformed kwargs
-heavy field to filter out does not exist
-link failed to be responsive
-"""
+def test_type_no_match():
+    response = get_object_type("egg")
+    assert response == None
 
 
-def test_search_catalogue():
-    pass
+
+def test_search_catalogue_success(monkeypatch):
+    def mock_call_api(params, api_type):
+        assert params == {'page': 1, 'title__icontains': 'Map'}
+        return {
+            "results": [
+                {
+                    "uuid": "some-UUID",
+                    "title": "Dataset",
+                    "information": [
+                        "fact 1",
+                        "fact 2",
+                        [],
+                    ],
+                    "empty_field": "",
+                    "null_field": None,
+                    "list_field": [],
+                    "onlineresource_set": "stuff that should disappear"
+                }
+            ]
+        }
+
+    monkeypatch.setattr("tool_functionality.search_catalogue.call_api", mock_call_api)
+    
+    response = search_catalogue(object_type="ob", title="Map")
+    assert response == {'response': {'results': [{'uuid': 'some-UUID', 'title': 'Dataset', 'information': ['fact 1', 'fact 2', []], 'empty_field': '', 'null_field': None, 'list_field': []}]}, 'verified_urls': ['https://catalogue.ceda.ac.uk/uuid/some-UUID/']}
 
 
-"""
-def test_get_record_success(monkeypatch):
-    def mock_call_api(params, endpoint):
-        if endpoint == "referenceables":
-            return {"results": [{"short_code": "ob"}]}
-        if endpoint == "observations":
-            assert params["uuid"] == "794eccbedfb6b78471fd077a4e406ac2"
-            return {
-                "results": [
-                    {
-                        "title": "Dataset",
-                        "information": [
-                            "fact 1",
-                            "fact 2",
-                            [],
-                        ],
-                        "empty_field": "",
-                        "null_field": None,
-                        "list_field": [],
-                    }
-                ]
-            }
+def test_search_catalogue_invalid_object_type():
+    response = search_catalogue("egg")
+    assert response == "Invalid object type. This must be any value from 'short_code' within your system prompt"
 
-    monkeypatch.setattr("tool_functionality.get_record.call_api", mock_call_api)
+def test_search_catalogue_api_error(monkeypatch):
+    def mock_call_api(params, api_type):
+        return {
+            "error": f"Request failed: RequestException",
+            "params": {"param1": "thing1", "param2": "thing2"},
+        }
 
-    response1 = get_record(UUID="794eccbedfb6b78471fd077a4e406ac2")
-    assert response1 == {"title": "Dataset", "information": ["fact 1", "fact 2", []]}
+    monkeypatch.setattr("tool_functionality.search_catalogue.call_api", mock_call_api)
 
-    response2 = get_record(
-        URL="https://catalogue.ceda.ac.uk/uuid/794eccbedfb6b78471fd077a4e406ac2/"
+    error_response = {
+        "error": f"Request failed: RequestException",
+        "params": {"param1": "thing1", "param2": "thing2"},
+    }
+
+    UUID = "normal-uuid"
+    response = search_catalogue(UUID=UUID, object_type="observation")
+    assert (
+        response
+        == f"API Error fetching information: {error_response}"
     )
-    assert response2 == {"title": "Dataset", "information": ["fact 1", "fact 2", []]}
 
-    response3 = get_record(
-        UUID="794eccbedfb6b78471fd077a4e406ac2",
-        URL="https://catalogue.ceda.ac.uk/uuid/12345678904fhdlj/",
+def test_search_catalogue_bad_link(monkeypatch):
+    def mock_call_api(params, api_type):
+        return {
+            "results": [
+                {
+                    "uuid": "some-UUID",
+                    "title": "Dataset",
+                    "information": [
+                        "fact 1",
+                        "fact 2",
+                        [],
+                    ],
+                    "empty_field": "",
+                    "null_field": None,
+                    "list_field": [],
+                }
+            ]
+        }
+    def mock_check_link(url):
+        return "unresponsive"
+
+    monkeypatch.setattr(
+        "tool_functionality.search_catalogue.check_link", mock_check_link
     )
-    assert response3 == {"title": "Dataset", "information": ["fact 1", "fact 2", []]}
-"""
+
+    monkeypatch.setattr("tool_functionality.search_catalogue.call_api", mock_call_api)
+    
+    response = search_catalogue(object_type="ob", title="Map")
+    assert response == {'response': {'results': [{'uuid': 'some-UUID', 'title': 'Dataset', 'information': ['fact 1', 'fact 2', []], 'empty_field': '', 'null_field': None, 'list_field': []}]}, 'verified_urls': ['Failed to create link for UUID: some-UUID']}
+
