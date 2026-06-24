@@ -1,7 +1,6 @@
 from tool_functionality.search_catalogue import search_catalogue
 
 
-
 """
 get_object_type:
 
@@ -21,23 +20,8 @@ link failed to be responsive
 """
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 def test_search_catalogue():
     pass
-
-
-
 
 
 """

@@ -32,14 +32,21 @@ def get_record(UUID: str = None, URL: str = None) -> dict:
     # get uuid type
     type_params = {"fields": "short_code", "uuid": UUID}
     response = call_api(type_params, "referenceables")
+    if "error" in response:
+        return f"An error occurred While trying to get the short code of UUID {UUID}. This may mean the UUID does not exist. Error: {response}"
+
     try:
         short_code = response["results"][0]["short_code"]
     except IndexError:
         return f"Failed to get short code of UUID {UUID}. This may mean the UUID does not exist."
 
+    if short_code not in API_TYPES:
+        return f"Unknown API short code: {short_code}"
     endpoint = API_TYPES[short_code]
 
     information = call_api({"uuid": UUID}, endpoint)
+    if "error" in information:
+        return f"API Error fetching information: {information}"
     result = {}
     if information["results"] == []:
         return f"Failed to get data for UUID {UUID}. Reaching this far means the UUID exists within referencables and that was called successfully, so this is highly irregular (perhaps the API shut down between calls?)"

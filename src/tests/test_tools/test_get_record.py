@@ -94,3 +94,58 @@ def test_get_record_fail_unsuccessful_information_call(monkeypatch):
         response
         == f"Failed to get data for UUID {UUID}. Reaching this far means the UUID exists within referencables and that was called successfully, so this is highly irregular (perhaps the API shut down between calls?)"
     )
+
+
+def test_get_record_fail_bad_short_code(monkeypatch):
+    def mock_call_api(params, endpoint):
+        return {"results": [{"short_code": "egg"}]}
+
+    monkeypatch.setattr("tool_functionality.get_record.call_api", mock_call_api)
+
+    UUID = "normal-uuid"
+    response = get_record(UUID=UUID)
+    assert response == "Unknown API short code: egg"
+
+
+def test_get_record_fail_API(monkeypatch):
+    def mock_call_api(params, endpoint):
+        return {
+            "error": f"Request failed: RequestException",
+            "params": {"param1": "thing1", "param2": "thing2"},
+        }
+
+    monkeypatch.setattr("tool_functionality.get_record.call_api", mock_call_api)
+
+    error_response = {
+        "error": f"Request failed: RequestException",
+        "params": {"param1": "thing1", "param2": "thing2"},
+    }
+
+    UUID = "normal-uuid"
+    response = get_record(UUID=UUID)
+    assert (
+        response
+        == f"An error occurred While trying to get the short code of UUID {UUID}. This may mean the UUID does not exist. Error: {error_response}"
+    )
+
+
+def test_get_record_fail_API_2(monkeypatch):
+    def mock_call_api(params, endpoint):
+        if endpoint == "referenceables":
+            return {"results": [{"short_code": "ob"}]}
+        if endpoint == "observations":
+            return {
+                "error": f"Request failed: RequestException",
+                "params": {"param1": "thing1", "param2": "thing2"},
+            }
+
+    monkeypatch.setattr("tool_functionality.get_record.call_api", mock_call_api)
+
+    error_response = {
+        "error": f"Request failed: RequestException",
+        "params": {"param1": "thing1", "param2": "thing2"},
+    }
+
+    UUID = "normal-uuid"
+    response = get_record(UUID=UUID)
+    assert response == f"API Error fetching information: {error_response}"

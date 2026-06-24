@@ -7,6 +7,7 @@ out_of_range
 unresponsive
 """
 
+
 def test_check_link_success(monkeypatch):
     class MockResponse:
         def __init__(self):

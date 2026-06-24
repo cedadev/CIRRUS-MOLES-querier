@@ -26,17 +26,6 @@ def search_catalogue_tool(
     page: int = 1,
     **kwargs
 ) -> dict:
-    """Searches the MOLES catalogue using filters like keywords, object type and path.
-    Use this tool when the user is looking for information. The responses are paginated, showing only up to the first 10 responses Which can be iterated through using page.
-    observations (datasets), observation collections, computations, instruments, projects and platforms.
-
-    Args:
-        object_type (str, optional): The type of catalogue object to filter by (e.g., observations (datasets), observation collections, computations, instruments, projects and platforms).
-        keywords (str, optional): Free-text keywords or search terms to match against the title and abstract.
-        path (str, optional): A specific directory or catalogue path to narrow down the search.
-        page (int, optional): The page number for paginated search results.
-        etc (str, optional): Additional catch-all search parameters.
-    """
     """
     Search the MOLES metadata catalogue for observations (could be referred to as datasets), computations, instruments, projects, platforms, observation collections (could be referred to as dataset collections)
 
