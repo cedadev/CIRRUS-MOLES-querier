@@ -1,6 +1,6 @@
 # On start
 
-copy src/etc/config.yml.example to src/etc/config.yml then change this file depending on how you will run the interface
+copy `src/etc/config.yml.example` to `src/etc/config.yml` then change this file depending on how you will run the interface (more information below)
 
 
 
