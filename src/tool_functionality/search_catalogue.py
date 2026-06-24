@@ -10,25 +10,26 @@ STRIP_FIELDS = {
     "onlineresource_set",
 }
 
+
 def get_object_type(object_type):
     obj_type = object_type.strip().lower()
-    
+
     # Direct key match
     for key in API_TYPES.keys():
         if obj_type in key:
             return API_TYPES[key]
-    
+
     # Direct value match
     for value in API_TYPES.values():
         if value == obj_type:
             return value
-            
+
     # substring match
     for value in API_TYPES.values():
         if obj_type in value:
             return value
-    
-    
+
+
 def search_catalogue(
     object_type: str,
     title: str = None,
@@ -48,7 +49,7 @@ def search_catalogue(
     timePeriodEnd: str = None,
     oldDataPath: list = None,
     page: int = 1,
-    **kwargs
+    **kwargs,
 ) -> dict:
     """Searches the MOLES catalogue using filters like keywords, object type and path.
     Use this tool when the user is looking for information. The responses are paginated, showing only up to the first 10 responses Which can be iterated through using page.
@@ -65,7 +66,7 @@ def search_catalogue(
     Search the MOLES metadata catalogue for observations (could be referred to as datasets), computations, instruments, projects, platforms, observation collections (could be referred to as dataset collections)
 
     Use this tool when a user is searching for record information
-    within the CEDA/MOLES catalogue. The tool supports heavy filtering and returns paginated results (20 per page).
+    within the CEDA/MOLES catalogue. The tool supports heavy filtering and returns paginated results (10 per page).
 
     Args:
         object_type (str): REQUIRED. The category of object to search for. Must be one of: 
@@ -94,12 +95,10 @@ def search_catalogue(
     """
     obj_type = get_object_type(object_type)
     if not obj_type:
-        return("Invalid object type. This must be any value from 'short_code' within your system prompt")
-    
-    params = {
-        "page": page
-    }
-    
+        return "Invalid object type. This must be any value from 'short_code' within your system prompt"
+
+    params = {"page": page}
+
     icontains_fields = {
         "title": title,
         "abstract": abstract,
@@ -112,14 +111,14 @@ def search_catalogue(
         "status": status,
         "doiPublishedTime": doiPublishedTime,
         "instrumentType": instrumentType,
-        "platformType": platformType
+        "platformType": platformType,
     }
-    
+
     # Add icontains if there are values
     for api_param, value in icontains_fields.items():
         if value:
             params[f"{api_param}__icontains"] = value
-            
+
     # Non icontains filters
     if path:
         params["result_field__dataPath__startswith"] = path
@@ -129,20 +128,22 @@ def search_catalogue(
         params["timePeriod__endTime__startswith"] = timePeriodEnd
     if oldDataPath:
         params["result_field__oldDataPath__contains"] = oldDataPath
-        
+
     # add extra arguments passed to the function.
     for key, value in kwargs.items():
         if value is not None:
             params[key] = value
-    
+
     response = call_api(params=params, api_type=obj_type)
-    
+    if "error" in response:
+        return f"API Error fetching information: {response}"
+
     # filter out heavy fields
     if isinstance(response.get("results"), list):
         for entry in response["results"]:
             for field in STRIP_FIELDS:
                 entry.pop(field, None)
-    
+
     url_list = []
     for object in response["results"]:
         uuid_tmp = object["uuid"]
