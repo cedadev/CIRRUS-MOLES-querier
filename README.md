@@ -10,7 +10,7 @@ If running on JASMIN, the config should be fine as is.
 
 run the chmod once
 ```shell
-chmod +x setup-env.sh
+module load jaspy
 source setup-env.sh
 ```
 
@@ -43,7 +43,6 @@ When running locally, ollama needs to be running and you need to set the model t
 ### mac
 run the chmod once
 ```shell
-chmod +x setup-env.sh
 source setup-env.sh
 ```
 
