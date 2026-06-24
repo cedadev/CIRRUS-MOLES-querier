@@ -4,12 +4,20 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_classic.agents import create_tool_calling_agent, AgentExecutor
 from langchain_ollama import ChatOllama
 from langchain.messages import HumanMessage, AIMessage
-
 from langchain_tools.langchain_tools import (
     search_catalogue_tool,
     get_record_tool,
     search_redirect_tool,
 )
+
+from tool_functionality.heartbeat_monitor import check_services
+
+heartbeat = check_services()
+if not heartbeat["api_online"]:
+    print("WARNING: THE MOLES API IS LIKELY OFFLINE")
+    
+if not heartbeat["ollama_online"]: # This can have an and added to determine if ollama is being used
+    print("WARNING: OLLAMA IS LIKELY OFFLINE")
 
 # Load model from config
 with open("etc/config.yml", "r") as f:
