@@ -66,7 +66,7 @@ def search_catalogue(
     Search the MOLES metadata catalogue for observations (could be referred to as datasets), computations, instruments, projects, platforms, observation collections (could be referred to as dataset collections)
 
     Use this tool when a user is searching for record information
-    within the CEDA/MOLES catalogue. The tool supports heavy filtering and returns paginated results (20 per page).
+    within the CEDA/MOLES catalogue. The tool supports heavy filtering and returns paginated results (10 per page).
 
     Args:
         object_type (str): REQUIRED. The category of object to search for. Must be one of: 
@@ -135,6 +135,8 @@ def search_catalogue(
             params[key] = value
 
     response = call_api(params=params, api_type=obj_type)
+    if "error" in response:
+        return f"API Error fetching information: {response}"
 
     # filter out heavy fields
     if isinstance(response.get("results"), list):

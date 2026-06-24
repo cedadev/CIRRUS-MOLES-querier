@@ -2,7 +2,7 @@ import requests
 from enum import Enum
 
 OBSERVATION_API_URL = "http://api.catalogue.ceda.ac.uk/api/v3/"
-DEFAULT_PAGE_SIZE = 20
+DEFAULT_PAGE_SIZE = 10
 
 
 def call_api(params: dict, api_type: str, page: int = 1) -> dict:
