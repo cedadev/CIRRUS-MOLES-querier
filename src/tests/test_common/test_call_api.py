@@ -1,6 +1,7 @@
 from tool_functionality.common import call_api
 import requests
 
+
 def test_call_api_success(monkeypatch):
     expected = {"results": ["a", "b"]}
 
@@ -19,7 +20,6 @@ def test_call_api_success(monkeypatch):
     result = call_api({"uuid": "good-uuid"}, "referenceables")
 
     assert result == expected
-
 
 
 def test_call_api_http_error(monkeypatch):
@@ -54,9 +54,7 @@ def test_call_api_timeout(monkeypatch):
 
 def test_call_api_connection_error(monkeypatch):
     def mock_get(url, params, timeout):
-        raise requests.exceptions.ConnectionError(
-            "Failed to establish connection"
-        )
+        raise requests.exceptions.ConnectionError("Failed to establish connection")
 
     monkeypatch.setattr(requests, "get", mock_get)
 

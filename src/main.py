@@ -1,4 +1,5 @@
 import yaml
+import logging
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_classic.agents import create_tool_calling_agent, AgentExecutor
@@ -12,12 +13,17 @@ from langchain_tools.langchain_tools import (
 
 from tool_functionality.heartbeat_monitor import check_services
 
+logging.basicConfig(level=logging.INFO)
+
 heartbeat = check_services()
-if not heartbeat["api_online"]:
-    print("WARNING: THE MOLES API IS LIKELY OFFLINE")
-    
-if not heartbeat["ollama_online"]: # This can have an and added to determine if ollama is being used
-    print("WARNING: OLLAMA IS LIKELY OFFLINE")
+if False in heartbeat.values():
+    if not heartbeat["api_online"]:
+        logging.warning("THE MOLES API IS LIKELY OFFLINE")
+
+    if not heartbeat[
+        "ollama_online"
+    ]:  # This can have an and added to determine if ollama is being used
+        logging.warning("OLLAMA IS LIKELY OFFLINE")
 
 # Load model from config
 with open("etc/config.yml", "r") as f:
@@ -29,7 +35,7 @@ if host_type == "JASMIN":
     model = config["LLM-type"]["JASMIN_LLM"]
 else:
     model = config["LLM-type"]["LOCAL_LLM"]
-print(f"loaded {model}")
+logging.info("loaded %s", model)
 
 # set up tools
 tools = [search_catalogue_tool, get_record_tool, search_redirect_tool]
@@ -96,7 +102,7 @@ while True:
         "\n--------------------\n\nEnter your query (or 'exit' to quit): "
     )
     if user_input.lower() in ["exit", "quit"]:
-        print("Exiting agent interaction.")
+        logging.info("Exiting agent interaction.")
         break
 
     try:
@@ -108,5 +114,4 @@ while True:
     except KeyboardInterrupt:
         print("\nGeneration stopped by user.")
     except Exception as e:
-        print(f"\nAn error occurred: {e}")
-    print(history)
+        logging.error("\nAn error occurred: %s", e)

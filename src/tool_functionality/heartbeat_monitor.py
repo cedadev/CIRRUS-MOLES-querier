@@ -1,5 +1,6 @@
 import requests
 
+
 def check_services():
     api = "https://api.catalogue.ceda.ac.uk/api/v3/"
     try:
@@ -7,7 +8,7 @@ def check_services():
         # check codes are 200-399 range
         api_online = response.status_code < 400
     except requests.exceptions.RequestException:
-        
+
         api_online = False
 
     # Check if Ollama is running

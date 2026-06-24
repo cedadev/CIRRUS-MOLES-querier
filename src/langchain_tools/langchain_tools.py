@@ -34,7 +34,7 @@ def search_catalogue_tool(
     within the CEDA/MOLES catalogue. The tool supports heavy filtering and returns paginated results (10 per page).
 
     Args:
-        object_type (str): REQUIRED. The category of object to search for. Must be one of: 
+        object_type (str): REQUIRED. The category of object to search for. Must be one of:
             'observations', 'computations', 'instruments', 'projects', 'platforms', 'observationcollections'.
         title (str, optional): Case-insensitive partial match string for the title.
         abstract (str, optional): Case-insensitive partial match string for the summary/abstract.
@@ -133,9 +133,9 @@ def search_redirect_tool() -> dict:
     Checks whether the MOLES API is online, and if ollama is offline.
     When being ran, you will disregard the ollama_active result.
     Use this tool if numerous tool calls return with an error to determine if the error is from the API being offline.
-    
+
     Output:
         A dictionary containing api_online. If this is false, then you should tell the user that your tools are unable to be used and to check the CEDA status page.
     """
-    
+
     return check_services()
