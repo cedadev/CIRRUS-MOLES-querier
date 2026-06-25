@@ -9,6 +9,7 @@ from langchain_tools.langchain_tools import (
     search_catalogue_tool,
     get_record_tool,
     search_redirect_tool,
+    api_heartbeat_tool,
 )
 
 from tool_functionality.heartbeat_monitor import check_services
@@ -43,7 +44,7 @@ def setup_agent():
     logging.info("loaded %s", model)
 
     # set up tools
-    tools = [search_catalogue_tool, get_record_tool, search_redirect_tool]
+    tools = [search_catalogue_tool, get_record_tool, search_redirect_tool, api_heartbeat_tool]
 
     llm = ChatOllama(model=model)
 

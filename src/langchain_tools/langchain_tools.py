@@ -128,14 +128,15 @@ def search_redirect_tool(query: str) -> str:
 
 
 @langchain_tool
-def search_redirect_tool() -> dict:
+def api_heartbeat_tool() -> dict:
     """
-    Checks whether the MOLES API is online, and if ollama is offline.
-    When being ran, you will disregard the ollama_active result.
+    Checks whether the MOLES API is online.
     Use this tool if numerous tool calls return with an error to determine if the error is from the API being offline.
 
     Output:
         A dictionary containing api_online. If this is false, then you should tell the user that your tools are unable to be used and to check the CEDA status page.
     """
 
-    return check_services()
+    response = check_services()
+    
+    return response["api_online"]
