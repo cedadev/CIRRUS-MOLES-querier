@@ -1,3 +1,5 @@
+import yaml
+
 def get_system_prompt():
     sys_prompt = f"""
 You are CIRRUS.
@@ -38,3 +40,37 @@ Format your response like this:
 (list of output URLs if any)
 """
     return sys_prompt
+
+
+def load_config():
+    # Load model from config
+    filepath = "etc/config.yml"
+    try:
+        with open(filepath, "r") as f:
+            config = yaml.safe_load(f)
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"Configuration file not found at {filepath}") from e
+    except yaml.YAMLError as e:
+        raise ValueError(f"Configuration file at {filepath} is malformed YAML") from e
+    
+    if not isinstance(config, dict):
+        raise ValueError(f"Configuration file at {filepath} must contain a valid YAML structure")
+    
+    try:
+        host_type = config["Host-type"]["host"]
+    except KeyError as e:
+        raise KeyError("Configuration missing required key path: ['Host-type']['host']") from e
+    
+    if "LLM-type" not in config:
+        raise KeyError("Configuration missing required 'LLM-type' section")
+    
+    llm_section = config["LLM-type"]
+    
+    if host_type == "JASMIN":
+        if "JASMIN_LLM" not in llm_section or not llm_section["JASMIN_LLM"]:
+            raise ValueError("Host is set to 'JASMIN', but 'JASMIN_LLM' model is missing or empty.")
+    else:
+        if "LOCAL_LLM" not in llm_section or not llm_section["LOCAL_LLM"]:
+            raise ValueError(f"Host is set to '{host_type}', but 'LOCAL_LLM' model is missing or empty.")
+
+    return config

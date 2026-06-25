@@ -1,5 +1,5 @@
-import yaml
 import logging
+import sys
 
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_classic.agents import create_tool_calling_agent, AgentExecutor
@@ -13,7 +13,7 @@ from langchain_tools.langchain_tools import (
 )
 
 from tool_functionality.heartbeat_monitor import check_services
-from system import get_system_prompt
+from system import get_system_prompt, load_config
 
 logging.basicConfig(level=logging.INFO)
 
@@ -31,10 +31,10 @@ def heartbeat():
 
 
 def setup_agent():
-    # Load model from config
-    with open("etc/config.yml", "r") as f:
-        config = yaml.safe_load(f)
-
+    try:
+        config = load_config()
+    except Exception as e:
+        raise
     host_type = config["Host-type"]["host"]
 
     if host_type == "JASMIN":
@@ -65,7 +65,7 @@ def setup_agent():
     return agent_executor
 
 
-def chat_loop():
+def chat_loop(agent_executor, history):
     while True:
         user_input = input(
             "\n--------------------\n\nEnter your query (or 'exit' to quit): "
@@ -93,10 +93,14 @@ if __name__ == "__main__":
     heartbeat()
 
     # setup the agent
-    agent_executor = setup_agent()
+    try:
+        agent_executor = setup_agent()
 
-    # conversation history
-    history = []
+        # conversation history
+        history = []
 
-    # run the LLM interface
-    chat_loop()
+        # run the LLM interface
+        chat_loop(agent_executor, history)
+    except Exception as e:
+        logging.error("System terminated due to: --- %s", e)
+        sys.exit(1)
