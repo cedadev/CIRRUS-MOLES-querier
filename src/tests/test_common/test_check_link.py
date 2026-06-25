@@ -1,12 +1,6 @@
 from tool_functionality.common import check_link
 import requests
 
-"""
-responsive
-out_of_range
-unresponsive
-"""
-
 
 def test_check_link_success(monkeypatch):
     class MockResponse:

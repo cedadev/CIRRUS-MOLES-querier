@@ -44,7 +44,12 @@ def setup_agent():
     logging.info("loaded %s", model)
 
     # set up tools
-    tools = [search_catalogue_tool, get_record_tool, search_redirect_tool, api_heartbeat_tool]
+    tools = [
+        search_catalogue_tool,
+        get_record_tool,
+        search_redirect_tool,
+        api_heartbeat_tool,
+    ]
 
     llm = ChatOllama(model=model)
 

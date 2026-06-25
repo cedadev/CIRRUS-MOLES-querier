@@ -1,5 +1,4 @@
 import requests
-from enum import Enum
 
 OBSERVATION_API_URL = "http://api.catalogue.ceda.ac.uk/api/v3/"
 DEFAULT_PAGE_SIZE = 10
@@ -8,8 +7,7 @@ DEFAULT_PAGE_SIZE = 10
 def call_api(params: dict, api_type: str, page: int = 1) -> dict:
     """
     Call the CEDA observations API with the given parameters.
-    Applies pagination and removes heavy fields from each dataset.
-    Returns the JSON response as a Python dict.
+    Applies pagination and returns the JSON response as a Python dict.
     """
     paginated_params = {
         **params,

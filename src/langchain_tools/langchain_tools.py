@@ -18,6 +18,7 @@ def search_catalogue_tool(
     dataLineage: str = None,
     publicationState: str = None,
     status: str = None,
+    dataPublishedTime: str = None,
     doiPublishedTime: str = None,
     instrumentType: str = None,
     platformType: str = None,
@@ -32,27 +33,33 @@ def search_catalogue_tool(
 
     Use this tool when a user is searching for record information
     within the CEDA/MOLES catalogue. The tool supports heavy filtering and returns paginated results (10 per page).
+    Either use a parameter and fill it in properly, or do not include it.
+    Running this tool without any parameters to filter by will not give you a useful result most of the time.
+    Using some parameters with certain object_types will ignore those parameters as they are not within the API response for that type.
+    Included are what object types each parameter can be used with. Using them with the wrong type will lead to the parameter being ignored.
+    Some parameters will require the use of an _ between words like instrumentType, but this is rare.
 
     Args:
         object_type (str): REQUIRED. The category of object to search for. Must be one of:
             'observations', 'computations', 'instruments', 'projects', 'platforms', 'observationcollections'.
-        title (str, optional): Case-insensitive partial match string for the title.
-        abstract (str, optional): Case-insensitive partial match string for the summary/abstract.
-        keywords (str, optional): Keywords or tags associated with the dataset. This is a specific keyword search, for searching for substrings, use the title or abstract
-        path (str, optional): The directory or catalogue path prefix (e.g., '/neodc/sister).
-        creationDate (str, optional): Date the record was created (e.g., '2022-07-22').
-        lastUpdatedDate (str, optional): Date the record was last modified.
-        status (str, optional): Operational status (e.g., 'completed', 'superseded').
-        instrumentType (str, optional): Filter by scientific instrument type used (will only work for instrument object type).
-        platformType (str, optional): Filter by platform type (e.g., 'satellite') (will only work for platform object type).
-        timePeriodStart (str, optional): Start window for the temporal coverage of data.
-        timePeriodEnd (str, optional): End window for the temporal coverage of data.
-        updateFrequency (str, optional): (e.g: 'notPlanned')
-        dataLineage (str, optional): search for where the data may have come from using case-insensitive partial match string
-        publicationState (str, optional): e.g: 'published'
-        doiPublishedTime (str, optional): when a DOI was published (e.g., '2022-07-22'). This may be a null value for many records if they don't have a DOI
-        oldDataPath (list, optional): a list type with a number in. Very few records have this value
-        page (int, optional): The page number for pagination. Defaults to 1.
+        title (str, optional): Case-insensitive partial match string for the title. All object types.
+        abstract (str, optional): Case-insensitive partial match string for the summary/abstract. All object types.
+        keywords (str, optional): Keywords or tags associated with the dataset. This is a specific keyword search, for searching for substrings, use the title or abstract. All object types.
+        path (str, optional): The directory or catalogue path prefix (e.g., '/neodc/sister'). Observations object types only.
+        creationDate (str, optional): Date the record was created (e.g., '2022-07-22'). Observations object types only.
+        lastUpdatedDate (str, optional): Date the record was last modified. Observations object types only.
+        updateFrequency (str, optional): (e.g: 'notPlanned', 'daily', 'asNeeded', etc). Observations object types only.
+        dataLineage (str, optional): search for where the data may have come from using case-insensitive partial match string. Observations object types only.
+        publicationState (str, optional): e.g: ('published', 'removed', 'citable', etc). Observations, Projects and Collections object types only.
+        status (str, optional): Operational status (e.g., 'completed', 'superseded', 'historicalArchive', 'ongoing', 'retired', etc). Observations and Projects object types only.
+        dataPublishedTime (str, optional): when the data was published, similar to doiPublishedTime. Observations and Collections object types only.
+        doiPublishedTime (str, optional): when a DOI was published (e.g., '2022-07-22'). This may be a null value for many records if they don't have a DOI. Observations and Collections object types only.
+        instrumentType (str, optional): Filter by scientific instrument type (e.g., 'radiometer', 'gas_chromatograph', 'instrument', etc) (will only work for instrument object type). Instruments object types only.
+        platformType (str, optional): Filter by platform type (e.g., 'satellite') (will only work for platform object type). Platforms object types only.
+        timePeriodStart (str, optional): Start window for the temporal coverage of data. Observations object types only.
+        timePeriodEnd (str, optional): End window for the temporal coverage of data. Observations object types only.
+        oldDataPath (list, optional): a list type with a number in. Very few records have this value. Observations object types only.
+        page (int, optional): The page number for pagination. Defaults to 1. Use to propagate through the results.
         kwargs (dict, optional): Additional catch-all search parameters.
 
     Returns:
@@ -72,6 +79,7 @@ def search_catalogue_tool(
         dataLineage,
         publicationState,
         status,
+        dataPublishedTime,
         doiPublishedTime,
         instrumentType,
         platformType,
@@ -111,17 +119,17 @@ def search_redirect_tool(query: str) -> str:
     """
     Create a Google Custom Search link for a user query.
 
-    This tool does not perform a search. It only generates a URL that the
-    user can open to view search results. Use this tool if a direct search fails or if a user provides an old, ambiguous or out of scope (such as help pages) query that needs resolving.
+    This tool does not perform a search. It only generates a URL that the user can open to view search results.
+    Use this tool if a direct search fails or if a user provides an old, ambiguous or out of scope (such as help pages) query that needs resolving.
     This will search the custom Google search engine across all CEDA searches.
 
     You should also give a brief explanation for why you are redirecting the user.
 
     Input:
-        A natural-language search query.
+        query (str): REQUIRED. A natural-language search query.
 
     Output:
-        A valid Google Custom Search URL as a string.
+        A validated Google Custom Search URL as a string.
     """
 
     return search_redirect(query)
@@ -138,5 +146,5 @@ def api_heartbeat_tool() -> dict:
     """
 
     response = check_services()
-    
+
     return response["api_online"]
