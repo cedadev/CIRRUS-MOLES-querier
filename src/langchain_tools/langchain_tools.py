@@ -24,7 +24,6 @@ def search_catalogue_tool(
     platformType: str = None,
     timePeriodStart: str = None,
     timePeriodEnd: str = None,
-    oldDataPath: list = None,
     page: int = 1,
     **kwargs
 ) -> dict:
@@ -46,19 +45,18 @@ def search_catalogue_tool(
         abstract (str, optional): Case-insensitive partial match string for the summary/abstract. All object types.
         keywords (str, optional): Keywords or tags associated with the dataset. This is a specific keyword search, for searching for substrings, use the title or abstract. All object types.
         path (str, optional): The directory or catalogue path prefix (e.g., '/neodc/sister'). Observations object types only.
-        creationDate (str, optional): Date the record was created (e.g., '2022-07-22'). Observations object types only.
-        lastUpdatedDate (str, optional): Date the record was last modified. Observations object types only.
+        creationDate (str, optional): Date the record was created (e.g., '2022-07-22'), only has dates for 2022 and above. Must enter in the format of a year 'yyyy'. Observations object types only.
+        lastUpdatedDate (str, optional): Date the record was last modified. Must enter in the format of a year 'yyyy'. Observations object types only.
         updateFrequency (str, optional): (e.g: 'notPlanned', 'daily', 'asNeeded', etc). Observations object types only.
         dataLineage (str, optional): search for where the data may have come from using case-insensitive partial match string. Observations object types only.
         publicationState (str, optional): e.g: ('published', 'removed', 'citable', etc). Observations, Projects and Collections object types only.
         status (str, optional): Operational status (e.g., 'completed', 'superseded', 'historicalArchive', 'ongoing', 'retired', etc). Observations and Projects object types only.
-        dataPublishedTime (str, optional): when the data was published, similar to doiPublishedTime. Observations and Collections object types only.
-        doiPublishedTime (str, optional): when a DOI was published (e.g., '2022-07-22'). This may be a null value for many records if they don't have a DOI. Observations and Collections object types only.
+        dataPublishedTime (str, optional): when the data was published, similar to doiPublishedTime. Must enter in the format of a year 'yyyy'. Observations and Collections object types only.
+        doiPublishedTime (str, optional): when a DOI was published (e.g., '2022-07-22'). This may be a null value for many records if they don't have a DOI. Must enter in the format of a year 'yyyy'. Observations and Collections object types only.
         instrumentType (str, optional): Filter by scientific instrument type (e.g., 'radiometer', 'gas_chromatograph', 'instrument', etc) (will only work for instrument object type). Instruments object types only.
         platformType (str, optional): Filter by platform type (e.g., 'satellite') (will only work for platform object type). Platforms object types only.
-        timePeriodStart (str, optional): Start window for the temporal coverage of data. Observations object types only.
-        timePeriodEnd (str, optional): End window for the temporal coverage of data. Observations object types only.
-        oldDataPath (list, optional): a list type with a number in. Very few records have this value. Observations object types only.
+        timePeriodStart (str, optional): Start window for the temporal coverage of data. Must enter in the format of a year 'yyyy'. Observations object types only.
+        timePeriodEnd (str, optional): End window for the temporal coverage of data. Must enter in the format of a year 'yyyy'. Observations object types only.
         page (int, optional): The page number for pagination. Defaults to 1. Use to propagate through the results.
         kwargs (dict, optional): Additional catch-all search parameters.
 
@@ -85,7 +83,6 @@ def search_catalogue_tool(
         platformType,
         timePeriodStart,
         timePeriodEnd,
-        oldDataPath,
         page,
         **kwargs
     )

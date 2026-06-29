@@ -1,4 +1,5 @@
 from .common import call_api, check_link, API_TYPES
+import re
 
 STRIP_FIELDS = {
     "phenomena",
@@ -30,25 +31,28 @@ def get_object_type(object_type):
             return value
 
 
+def check_year(value):
+    return bool(re.match(r"^\d{4}$", str(value)))
+
+
 def search_catalogue(
     object_type: str,
     title: str = None,
     abstract: str = None,
     keywords: str = None,
-    path: str = None, # OBSERVATION
-    creationDate: str = None, # OBSERVATION
-    lastUpdatedDate: str = None, # OBSERVATION
-    updateFrequency: str = None, # OBSERVATION
-    dataLineage: str = None, # OBSERVATION
-    publicationState: str = None, # OBSERVATION + project + coll
-    status: str = None, # OBSERVATION + project
-    dataPublishedTime: str = None, # OBSERVATION + coll
-    doiPublishedTime: str = None, # OBSERVATION + coll
-    instrumentType: str = None, # instrument only
-    platformType: str = None, # platform only
-    timePeriodStart: str = None, # OBSERVATION
-    timePeriodEnd: str = None, # OBSERVATION
-    oldDataPath: list = None, # OBSERVATION
+    path: str = None,
+    creationDate: str = None,
+    lastUpdatedDate: str = None,
+    updateFrequency: str = None,
+    dataLineage: str = None,
+    publicationState: str = None,
+    status: str = None,
+    dataPublishedTime: str = None,
+    doiPublishedTime: str = None,
+    instrumentType: str = None,
+    platformType: str = None,
+    timePeriodStart: str = None,
+    timePeriodEnd: str = None,
     page: int = 1,
     **kwargs,
 ) -> dict:
@@ -62,14 +66,10 @@ def search_catalogue(
         "title": title,
         "abstract": abstract,
         "keywords": keywords,
-        "creationDate": creationDate,
-        "lastUpdatedDate": lastUpdatedDate,
         "updateFrequency": updateFrequency,
         "dataLineage": dataLineage,
         "publicationState": publicationState,
         "status": status,
-        "dataPublishedTime": dataPublishedTime,
-        "doiPublishedTime": doiPublishedTime,
         "instrumentType": instrumentType,
         "platformType": platformType,
     }
@@ -78,16 +78,42 @@ def search_catalogue(
     for api_param, value in icontains_fields.items():
         if value:
             params[f"{api_param}__icontains"] = value
+    
+    
+    range_fields = {
+        "dataPublishedTime": dataPublishedTime,
+        "doiPublishedTime": doiPublishedTime,
+        "lastUpdatedDate": lastUpdatedDate,
+    }
+    
+    # Add range if there are values and they are years
+    for api_param, value in range_fields.items():
+        if value and check_year(value):
+            params[f"{api_param}__gte"] = f"{value}-01-01"
+            params[f"{api_param}__lte"] = f"{value}-12-31"
+    
+    
 
-    # Non icontains filters
+    # nested filters
     if path:
         params["result_field__dataPath__startswith"] = path
-    if timePeriodStart:
-        params["timePeriod__startTime__startswith"] = timePeriodStart
-    if timePeriodEnd:
-        params["timePeriod__endTime__startswith"] = timePeriodEnd
-    if oldDataPath:
-        params["result_field__oldDataPath__contains"] = oldDataPath
+    if creationDate: # TODO test
+        if check_year(creationDate):
+            params["creationDate__year"] = creationDate
+        else:
+            return(f"creationDate not a year. You put: {creationDate}")
+    if timePeriodStart: # TODO test
+        if check_year(timePeriodStart):
+            params["timePeriod__startTime__gte"] = f"{timePeriodStart}-01-01"
+            params["timePeriod__startTime__lte"] = f"{timePeriodStart}-12-31"
+        else:
+            return(f"timePeriodStart not a year. You put: {timePeriodStart}")
+    if timePeriodEnd: # TODO test
+        if check_year(timePeriodEnd):
+            params["timePeriod__endTime__gte"] = f"{timePeriodEnd}-01-01"
+            params["timePeriod__endTime__lte"] = f"{timePeriodEnd}-12-31"
+        else:
+            return(f"timePeriodEnd not a year. You put: {timePeriodEnd}")
 
     # add extra arguments passed to the function.
     for key, value in kwargs.items():
