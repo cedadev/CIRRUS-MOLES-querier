@@ -60,7 +60,7 @@ def search_catalogue(
     if not obj_type:
         return "Invalid object type. This must be any value from 'short_code' within your system prompt"
 
-    params = {"page": page}
+    params = {}
 
     icontains_fields = {
         "title": title,
@@ -120,7 +120,7 @@ def search_catalogue(
         if value is not None:
             params[key] = value
 
-    response = call_api(params=params, api_type=obj_type)
+    response = call_api(params=params, api_type=obj_type, page=page)
     if "error" in response:
         return f"API Error fetching information: {response}"
 
