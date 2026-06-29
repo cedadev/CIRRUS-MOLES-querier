@@ -1,4 +1,8 @@
-from tool_functionality.search_catalogue import search_catalogue, get_object_type
+from tool_functionality.search_catalogue import (
+    search_catalogue,
+    get_object_type,
+    check_year,
+)
 
 
 def test_type_key_match():
@@ -21,9 +25,33 @@ def test_type_no_match():
     assert response == None
 
 
+def test_check_year_valid():
+    year = "1870"
+    response = check_year(year)
+    assert response == True
+
+
+def test_check_year_too_short():
+    year = "187"
+    response = check_year(year)
+    assert response == False
+
+
+def test_check_year_too_long():
+    year = "01870"
+    response = check_year(year)
+    assert response == False
+
+
+def test_check_year_includes_letters():
+    year = "1870five"
+    response = check_year(year)
+    assert response == False
+
+
 def test_search_catalogue_success(monkeypatch):
-    def mock_call_api(params, api_type):
-        assert params == {"page": 1, "title__icontains": "Map"}
+    def mock_call_api(params, api_type, page):
+        assert params == {"title__icontains": "Map"}
         return {
             "results": [
                 {
@@ -71,7 +99,7 @@ def test_search_catalogue_invalid_object_type():
 
 
 def test_search_catalogue_api_error(monkeypatch):
-    def mock_call_api(params, api_type):
+    def mock_call_api(params, api_type, page):
         return {
             "error": f"Request failed: RequestException",
             "params": {"param1": "thing1", "param2": "thing2"},
@@ -90,7 +118,7 @@ def test_search_catalogue_api_error(monkeypatch):
 
 
 def test_search_catalogue_bad_link(monkeypatch):
-    def mock_call_api(params, api_type):
+    def mock_call_api(params, api_type, page):
         return {
             "results": [
                 {

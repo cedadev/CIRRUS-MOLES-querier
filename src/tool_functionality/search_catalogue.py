@@ -78,42 +78,39 @@ def search_catalogue(
     for api_param, value in icontains_fields.items():
         if value:
             params[f"{api_param}__icontains"] = value
-    
-    
+
     range_fields = {
         "dataPublishedTime": dataPublishedTime,
         "doiPublishedTime": doiPublishedTime,
         "lastUpdatedDate": lastUpdatedDate,
     }
-    
+
     # Add range if there are values and they are years
     for api_param, value in range_fields.items():
         if value and check_year(value):
             params[f"{api_param}__gte"] = f"{value}-01-01"
             params[f"{api_param}__lte"] = f"{value}-12-31"
-    
-    
 
     # nested filters
     if path:
         params["result_field__dataPath__startswith"] = path
-    if creationDate: # TODO test
+    if creationDate:  # TODO test
         if check_year(creationDate):
             params["creationDate__year"] = creationDate
         else:
-            return(f"creationDate not a year. You put: {creationDate}")
-    if timePeriodStart: # TODO test
+            return f"creationDate not a year. You put: {creationDate}"
+    if timePeriodStart:  # TODO test
         if check_year(timePeriodStart):
             params["timePeriod__startTime__gte"] = f"{timePeriodStart}-01-01"
             params["timePeriod__startTime__lte"] = f"{timePeriodStart}-12-31"
         else:
-            return(f"timePeriodStart not a year. You put: {timePeriodStart}")
-    if timePeriodEnd: # TODO test
+            return f"timePeriodStart not a year. You put: {timePeriodStart}"
+    if timePeriodEnd:  # TODO test
         if check_year(timePeriodEnd):
             params["timePeriod__endTime__gte"] = f"{timePeriodEnd}-01-01"
             params["timePeriod__endTime__lte"] = f"{timePeriodEnd}-12-31"
         else:
-            return(f"timePeriodEnd not a year. You put: {timePeriodEnd}")
+            return f"timePeriodEnd not a year. You put: {timePeriodEnd}"
 
     # add extra arguments passed to the function.
     for key, value in kwargs.items():
