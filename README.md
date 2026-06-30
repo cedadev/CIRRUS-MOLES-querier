@@ -43,7 +43,6 @@ When running locally, ollama needs to be running and you need to set the model t
 On ollama, make sure the model context in settings is set to at least 32K, this is to avoid the LLM running irrelevant tool calls if it runs out of context length
 
 ### mac
-run the chmod once
 ```shell
 source setup-env.sh
 ```
@@ -69,28 +68,13 @@ python main.py
 
 # UI
 
-on first creation:
-```bash
-chainlit create-secret
+To setup and run the UI: Run only this:
+
+### mac
+```shell
+source start-ui.sh
 ```
-copy the key into a .env file that you will create in `src` (`src/.env`)
-it should look something like this
-CHAINLIT_AUTH_SECRET="{YOUR_SECRET_KEY}"
-
-
-```bash
-python graphical_interface/init_sqlite_db.py
-```
-
-
-
-
-commands to run each time
-``` bash
-cd src
-export PYTHONPATH=$PWD
-chainlit run graphical_interface/chainlit_chatbot.py -w
-```
+This will automatically setup the venv, .env and db as well start the server in that terminal
 
 link to UI:
 http://127.0.0.1:8000/login
