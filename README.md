@@ -40,6 +40,8 @@ python main.py
 When running locally, ollama needs to be running and you need to set the model that you want ollama to use in src/etc/config.yml
 (LOCAL_LLM), you will also need to change the host to be "local".
 
+On ollama, make sure the model context in settings is set to at least 32K, this is to avoid the LLM running irrelevant tool calls if it runs out of context length
+
 ### mac
 run the chmod once
 ```shell
