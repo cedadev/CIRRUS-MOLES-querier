@@ -3,12 +3,12 @@
 copy `src/etc/config.yml.example` to `src/etc/config.yml` then change this file depending on how you will run the interface (more information below)
 
 
+# Terminal version
 
-# JASMIN
+## JASMIN
 
 If running on JASMIN, the config should be fine as is.
 
-run the chmod once
 ```shell
 module load jaspy
 source setup-env.sh
@@ -35,7 +35,7 @@ python main.py
 
 
 ---
-# Local
+## Local
 
 When running locally, ollama needs to be running and you need to set the model that you want ollama to use in src/etc/config.yml
 (LOCAL_LLM), you will also need to change the host to be "local".
@@ -66,7 +66,31 @@ python main.py
 
 
 
-# UI
+# UI version
+link to UI:
+http://127.0.0.1:8000/login
+
+## JASMIN
+
+start GPU node and wait until you get resources
+```shell
+srun --gres=gpu:2 --mem=192000 --partition=orchid --account=orchid --qos=orchid --time=03:00:00 --pty /bin/bash
+```
+
+start ollama. This takes a while which is why the sleep is here.
+```shell
+./run-ollama.sh > ollama.log 2>&1 &
+sleep 60
+```
+
+```shell
+module load jaspy
+source start-ui.sh
+```
+
+---
+
+## local
 
 To setup and run the UI: Run only this:
 
@@ -74,7 +98,12 @@ To setup and run the UI: Run only this:
 ```shell
 source start-ui.sh
 ```
-This will automatically setup the venv, .env and db as well start the server in that terminal
 
-link to UI:
-http://127.0.0.1:8000/login
+### Windows
+```shell
+. .\start-ui.ps1
+```
+
+
+both of these methods will
+automatically setup the venv, .env and db as well start the server in that terminal
