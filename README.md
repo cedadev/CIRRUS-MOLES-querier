@@ -58,3 +58,37 @@ Then you can run the LLM interface
 cd src
 python main.py
 ```
+
+
+
+
+
+
+
+# UI
+
+on first creation:
+```bash
+chainlit create-secret
+```
+copy the key into a .env file that you will create in `src` (`src/.env`)
+it should look something like this
+CHAINLIT_AUTH_SECRET="{YOUR_SECRET_KEY}"
+
+
+```bash
+python graphical_interface/init_sqlite_db.py
+```
+
+
+
+
+commands to run each time
+``` bash
+cd src
+export PYTHONPATH=$PWD
+chainlit run graphical_interface/chainlit_chatbot.py -w
+```
+
+link to UI:
+http://127.0.0.1:8000/login

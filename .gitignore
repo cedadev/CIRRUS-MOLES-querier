@@ -2,6 +2,9 @@ CIRRUS_venv
 __pycache__
 .pytest_cache
 ollama.log
+.chainlit
+.env
+chainlit.db
 
 config.yml
 notes.md
