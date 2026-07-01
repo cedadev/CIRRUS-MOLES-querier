@@ -3,7 +3,7 @@
 copy `src/etc/config.yml.example` to `src/etc/config.yml` then change this file depending on how you will run the interface (more information below)
 
 
-# Terminal version
+# Terminal conversation version
 
 ## JASMIN
 
@@ -67,10 +67,14 @@ python main.py
 
 
 # UI version
-link to UI:
-http://127.0.0.1:8000/login
+
+When you get access to the UI page, login with the below credentials (it doesn't matter what you use, as long as it is consistent)
+username = test
+password = test
 
 ## JASMIN
+
+The config should again be fine as is.
 
 start GPU node and wait until you get resources
 ```shell
@@ -92,7 +96,10 @@ source start-ui.sh
 
 ## local
 
-To setup and run the UI: Run only this:
+When running locally, ollama needs to be running and you need to set the model that you want ollama to use in src/etc/config.yml
+(LOCAL_LLM), you will also need to change the host to be "local".
+
+On ollama, make sure the model context in settings is set to at least 32K, this is to avoid the LLM running irrelevant tool calls if it runs out of context length
 
 ### mac
 ```shell
@@ -104,6 +111,6 @@ source start-ui.sh
 . .\start-ui.ps1
 ```
 
-
-both of these methods will
-automatically setup the venv, .env and db as well start the server in that terminal
+Then visit the UI\
+link to UI:
+http://127.0.0.1:8000/login
