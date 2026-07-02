@@ -97,14 +97,70 @@ def test_load_config_missing_jasmin_llm(mocker):
     )
 
 
+def test_load_config_missing_ui_type(mocker):
+    missing_ui = """
+    Host-type:
+      host: "local"
+    LLM-type:
+      LOCAL_LLM: "llama3.1"
+    """
+    mocker.patch("builtins.open", mocker.mock_open(read_data=missing_ui))
+
+    with pytest.raises(KeyError) as exc_info:
+        load_config()
+    assert "Configuration missing required 'UI-type' section" in str(exc_info.value)
+
+
+def test_load_config_missing_ui_location(mocker):
+    missing_location = """
+    Host-type:
+      host: "local"
+    LLM-type:
+      LOCAL_LLM: "llama3.1"
+    UI-type:
+      not_location: "local"
+    """
+    mocker.patch("builtins.open", mocker.mock_open(read_data=missing_location))
+
+    with pytest.raises(ValueError) as exc_info:
+        load_config()
+    assert (
+        str(exc_info.value)
+        == "Configuration missing or empty value for key path: ['UI-type']['location']"
+    )
+
+
+def test_load_config_empty_ui_location(mocker):
+    empty_location = """
+    Host-type:
+      host: "local"
+    LLM-type:
+      LOCAL_LLM: "llama3.1"
+    UI-type:
+      location: ""
+    """
+    mocker.patch("builtins.open", mocker.mock_open(read_data=empty_location))
+
+    with pytest.raises(ValueError) as exc_info:
+        load_config()
+    assert (
+        str(exc_info.value)
+        == "Configuration missing or empty value for key path: ['UI-type']['location']"
+    )
+
+
 def test_load_config_success(mocker):
     valid_yaml = """
     Host-type:
       host: "local"
     LLM-type:
-      LOCAL_LLM: "gemma4:31b"
+      LOCAL_LLM: "llama3.1"
+    UI-type:
+      location: "local"
     """
     mocker.patch("builtins.open", mocker.mock_open(read_data=valid_yaml))
 
     config = load_config()
     assert config["Host-type"]["host"] == "local"
+    assert config["UI-type"]["location"] == "local"
+    assert config["LLM-type"]["LOCAL_LLM"] == "llama3.1"

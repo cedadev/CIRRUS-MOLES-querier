@@ -46,7 +46,6 @@ Format your response like this:
 
 
 def load_config():
-    # Load model from config
     filepath = "etc/config.yml"
     try:
         with open(filepath, "r") as f:
@@ -83,5 +82,15 @@ def load_config():
             raise ValueError(
                 f"Host is set to '{host_type}', but 'LOCAL_LLM' model is missing or empty."
             )
+
+    if "UI-type" not in config:
+        raise KeyError("Configuration missing required 'UI-type' section")
+
+    ui_section = config["UI-type"]
+
+    if "location" not in ui_section or not ui_section["location"]:
+        raise ValueError(
+            "Configuration missing or empty value for key path: ['UI-type']['location']"
+        )
 
     return config

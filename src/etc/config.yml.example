@@ -2,5 +2,8 @@ Host-type:
   host: "JASMIN"
 
 LLM-type:
-  JASMIN_LLM: "gemma4:31b"
+  JASMIN_LLM: "gemma4:31"
   LOCAL_LLM: 
+
+UI-type:
+  location: "local"
