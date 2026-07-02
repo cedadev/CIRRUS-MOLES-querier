@@ -40,7 +40,7 @@ def test_load_config_invalid_structure(mocker):
 def test_load_config_missing_host_type(mocker):
     missing_host = """
     LLM-type:
-      LOCAL_LLM: "llama3.1"
+      LOCAL_LLM: "gemma4:31b"
     """
     mocker.patch("builtins.open", mocker.mock_open(read_data=missing_host))
 
@@ -68,7 +68,7 @@ def test_load_config_missing_local_llm(mocker):
     Host-type:
       host: "local"
     LLM-type:
-      JASMIN_LLM: "llama3.3"
+      JASMIN_LLM: "gemma4:31b"
     """
     mocker.patch("builtins.open", mocker.mock_open(read_data=missing_local_model))
 
@@ -85,7 +85,7 @@ def test_load_config_missing_jasmin_llm(mocker):
     Host-type:
       host: "JASMIN"
     LLM-type:
-      LOCAL_LLM: "llama3.1"
+      LOCAL_LLM: "gemma4:31b"
     """
     mocker.patch("builtins.open", mocker.mock_open(read_data=missing_jasmin_model))
 
