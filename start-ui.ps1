@@ -40,7 +40,6 @@ else {
 
 # Start the UI
 Write-Host "Starting Chainlit server"
-Write-Host "Please visit 'http://localhost:8000/login'"
 
 # Set PYTHONPATH for this session
 $env:PYTHONPATH = (Get-Location).Path

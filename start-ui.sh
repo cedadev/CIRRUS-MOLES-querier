@@ -27,6 +27,5 @@ fi
 
 # Start the UI
 echo "Starting chainlit server"
-echo "Please visit 'http://localhost:8000/login'"
 export PYTHONPATH=$PWD
 chainlit run graphical_interface/chainlit_chatbot.py -w
