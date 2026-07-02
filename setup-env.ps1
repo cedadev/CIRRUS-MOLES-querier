@@ -1,9 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env pwsh
 
 # Creates the venv if it doesn't exist
 if (-not (Test-Path "CIRRUS_venv")) {
     Write-Host "Creating virtual environment..."
-    python -m venv CIRRUS_venv
+    if (Get-Command py -ErrorAction SilentlyContinue) {
+        if (py -3.13 --version 2>$null) {
+            py -3.13 -m venv CIRRUS_venv
+        }
+        elseif (py -3.12 --version 2>$null) {
+            py -3.12 -m venv CIRRUS_venv
+        }
+        else {
+            Write-Error "Python 3.12 or 3.13 is required. Please install it from https://python.org."
+            exit 1
+        }
+    }
+    else {
+        Write-Error "Python Launcher (py.exe) not found."
+        exit 1
+    }
 }
 else {
     Write-Host "Virtual environment already exists. Skipping creation."

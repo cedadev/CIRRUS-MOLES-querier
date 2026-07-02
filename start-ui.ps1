@@ -1,3 +1,5 @@
+#!/usr/bin/env pwsh
+
 . .\setup-env.ps1
 
 $ENV_FILE = "src\.env"

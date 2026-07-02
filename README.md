@@ -48,6 +48,7 @@ source setup-env.sh
 ```
 
 ### windows
+You must have a python version of either 3.12 or 3.13 (it will tell you if you don't)
 ```shell
 . .\setup-env.ps1
 ```
