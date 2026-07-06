@@ -7,7 +7,9 @@ copy `src/etc/config.yml.example` to `src/etc/config.yml` then change this file 
 
 ## JASMIN
 
-If running on JASMIN, the config should be fine as is.
+If running on JASMIN, the config should be fine as is.\
+You must be in a sci-ph server to run this\
+Simply run the following commands in the same terminal window
 
 ```shell
 module load jaspy
@@ -37,8 +39,8 @@ python main.py
 ---
 ## Local
 
-When running locally, ollama needs to be running and you need to set the model that you want ollama to use in src/etc/config.yml
-(LOCAL_LLM), you will also need to change the host to be "local".
+When running locally, ollama needs to be running and you need to set the model that you want ollama to use in src/etc/config.yml\
+(LOCAL_LLM), you will also need to change the host in Host-type to be "local".
 
 On ollama, make sure the model context in settings is set to at least 32K, this is to avoid the LLM running irrelevant tool calls if it runs out of context length
 
@@ -69,11 +71,13 @@ python main.py
 
 # UI version
 
-When you get access to the UI page, login with the below credentials (it doesn't matter what you use, as long as it is consistent)
-username = test
+When you get access to the UI page, login with the below credentials (it doesn't matter what username or password you use, as long as it is consistent)\
+username = test\
 password = test
 
 ## JASMIN
+
+**Unfortunately running the UI on JASMIN currently does not work due to a port forwarding issue**
 
 The config should again be fine as is.
 
