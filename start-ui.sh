@@ -28,4 +28,10 @@ fi
 # Start the UI
 echo "Starting chainlit server"
 export PYTHONPATH=$PWD
-chainlit run graphical_interface/chainlit_chatbot.py -w
+# Check if the flag is --JASMIN
+if [ "$1" == "--JASMIN" ]; then
+    echo "Running JASMIN UI"
+    chainlit run graphical_interface/chainlit_chatbot.py -w --host 0.0.0.0 --port 8000
+else
+    chainlit run graphical_interface/chainlit_chatbot.py -w
+fi
