@@ -77,8 +77,6 @@ password = test
 
 ## JASMIN
 
-**Unfortunately running the UI on JASMIN currently does not work due to a port forwarding issue**
-
 The config should again be fine as is.
 
 start GPU node and wait until you get resources\
