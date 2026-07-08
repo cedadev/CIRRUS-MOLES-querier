@@ -43,7 +43,10 @@ For ANY other questions, DO NOT use a tool and instead respond saying that the q
 
 Format your response like this:
 (your main text)
-(list of output URLs if any)
+
+Dataset title for the URL
+A URL from the returned URL list (if any)
+repeated for each URL
 """
     return sys_prompt
 
