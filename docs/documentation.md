@@ -57,6 +57,7 @@ The ui start script will run the setup script and will create a .env with the CH
 
 `graphical_interface` has all the files used for the UI
 - `chainlit.db` created when the UI setup script is ran, is what is used for conversation history for the UI
+- `init_sqlite_db.py` this is ran by the setup scripts to create the database with everything it needs in.
 - `chainlit_chatbot.py` What runs the UI. **This currently does not have a proper authentication system as this project has not been deployed** 
 
 `langchain_tools` has a single file for tool wrappers
