@@ -133,3 +133,44 @@ It has been made intentionally easy for this project to be connected to an API L
 
 
 ## diagram explanations
+
+
+
+</br></br></br>
+
+
+# Troubleshooting
+## LLMs to use
+This project will use the Gemma4:31b model on JASMIN (this can be exchanged for the llama3.1:70b model, but this project was built for gemma).
+However, it is unlikely you will be able to run the 31b Gemma model at home.
+
+I have found that the 26b parameter model works well also and I was able to run this locally on my GPU.
+If you do not have a porwerful GPU or want ot run a different model, make sure the model says "tools" in the tags so that it can use the langchain tools (or it will give you a warning when trying to query it)
+
+
+## JASMIN UI portforwarding
+port forwarding when running the UI can be tricky on JASMIN. I have tried to explain it as best as I could on the README but it is likely you will run into problems. Just make sure you are using VSCode when trying to run the UI from JASMIN as that is what handles the port forwarding.
+However, you do not need VS code to run the terminal version of the LLM
+
+
+## Getting orchid resources
+after running the srun command to get the resources required to run the model on ollama, it may get stuck on waiting for resources. This could be for a number of reasons. It could get stuck for just a minute or so, or it could be stuck for large sections of the day during peak usage.
+
+If it is getting stuck and you have waited a very long time for resources, it is best to leave it and come back to it another time (maybe a few hours later) when it might work.
+
+
+## Permissions
+You will need to have orchid permissions on your JASMIN account to run the project through JASMIN (UI or terminal versions)
+You also may not be able to access the file location where ollama and the model are because of GWS permissions, however you still should be able to use them just fine.
+
+
+## SSH
+You may have a problem SSHing to JASMIN. If you do, consult the JASMIN guides.
+You should be in the sci-ph machines (as they are the ones I have tested in), but it may work in the sci-vm machines (not tested)
+
+
+## Known UI issues 
+The UI is a temporary thing set up to demonstrate it, the terminal version was used for most testing.
+These problems have been encountered when running the UI:
+- Using the stop button doesn't work and may cause later prompts to fail.
+- Sometimes the UI will not display any information after the LLM has processed. if this happens, prompt it again saying to do it again.
