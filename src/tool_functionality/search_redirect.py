@@ -3,6 +3,9 @@ from urllib.parse import quote_plus
 
 
 def search_redirect(query: str) -> str:
+    """
+    converts the query into a search URL for the CEDA Custom Google Search
+    """
     if query is None:
         return "Query must not be a None type"
     redirect_link = (

@@ -2,6 +2,10 @@ import requests
 
 
 def check_services():
+    """
+    Checks if Ollama is active
+    Checks if the MOLES API is responsive
+    """
     api = "https://api.catalogue.ceda.ac.uk/api/v3/"
     try:
         response = requests.get(api, timeout=5)

@@ -32,6 +32,7 @@ def get_object_type(object_type):
 
 
 def check_year(value):
+    # quick check to make sure a year is a 4 digit integer
     return bool(re.match(r"^\d{4}$", str(value)))
 
 
@@ -56,12 +57,14 @@ def search_catalogue(
     page: int = 1,
     **kwargs,
 ) -> dict:
+    # Converts given object type into one that can be used in an API call
     obj_type = get_object_type(object_type)
     if not obj_type:
         return "Invalid object type. This must be any value from 'short_code' within your system prompt"
 
     params = {}
 
+    # Fields to search using icontains (case insensitive word lookup)
     icontains_fields = {
         "title": title,
         "abstract": abstract,
@@ -79,6 +82,7 @@ def search_catalogue(
         if value:
             params[f"{api_param}__icontains"] = value
 
+    # Fields to use the range filter (will find anything within the year selected)
     range_fields = {
         "dataPublishedTime": dataPublishedTime,
         "doiPublishedTime": doiPublishedTime,
@@ -91,21 +95,21 @@ def search_catalogue(
             params[f"{api_param}__gte"] = f"{value}-01-01"
             params[f"{api_param}__lte"] = f"{value}-12-31"
 
-    # nested filters
+    # unique filters (because they are nested in the response)
     if path:
         params["result_field__dataPath__startswith"] = path
-    if creationDate:  # TODO test
+    if creationDate:
         if check_year(creationDate):
             params["creationDate__year"] = creationDate
         else:
             return f"creationDate not a year. You put: {creationDate}"
-    if timePeriodStart:  # TODO test
+    if timePeriodStart:
         if check_year(timePeriodStart):
             params["timePeriod__startTime__gte"] = f"{timePeriodStart}-01-01"
             params["timePeriod__startTime__lte"] = f"{timePeriodStart}-12-31"
         else:
             return f"timePeriodStart not a year. You put: {timePeriodStart}"
-    if timePeriodEnd:  # TODO test
+    if timePeriodEnd:
         if check_year(timePeriodEnd):
             params["timePeriod__endTime__gte"] = f"{timePeriodEnd}-01-01"
             params["timePeriod__endTime__lte"] = f"{timePeriodEnd}-12-31"
@@ -121,12 +125,14 @@ def search_catalogue(
     if "error" in response:
         return f"API Error fetching information: {response}"
 
-    # filter out heavy fields
+    # filter out heavy fields (trying to reduce the context length)
     if isinstance(response.get("results"), list):
         for entry in response["results"]:
             for field in STRIP_FIELDS:
                 entry.pop(field, None)
 
+    # Create a list of verified URLs from the returned UUIDs in the response
+    # This is for ease of connectivity to the catalogue
     url_list = []
     for object in response["results"]:
         uuid_tmp = object["uuid"]
@@ -138,19 +144,3 @@ def search_catalogue(
             url_list.append(f"Failed to create link for UUID: {uuid_tmp}")
 
     return {"response": response, "verified_urls": url_list}
-
-
-# Possible things to search for (bbox might need Graham's suggestion)
-"""
-geographicExtent__bbox_Name??
-geographicExtent__eastBoundLongitude
-geographicExtent__westBoundLongitude
-geographicExtent__southBoundLatitude
-geographicExtent__northBoundLatitude
-
-location__bboxName??
-location__eastBoundLongitude
-location__westBoundLongitude
-location__southBoundLatitude
-location__northBoundLatitude
-"""

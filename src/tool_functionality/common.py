@@ -40,6 +40,11 @@ def call_api(params: dict, api_type: str, page: int = 1) -> dict:
 
 
 def check_link(url):
+    """
+    Tests given URL if it returns a 200 code
+    if it isn't 200 - out_of_range
+    if it fails - unresponsive
+    """
     try:
         r = requests.get(url, timeout=15)
         if 200 <= r.status_code < 300:

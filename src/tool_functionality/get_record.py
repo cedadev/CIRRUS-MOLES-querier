@@ -2,14 +2,15 @@ from .common import call_api, API_TYPES
 
 
 def get_record(UUID: str = None, URL: str = None) -> dict:
-    # Extract UUID
     if UUID is None and URL:
         try:
+            # Extract UUID from URL
             UUID = URL.split("/uuid/", 1)[1].split("/", 1)[0]
         except IndexError:
             return "You must enter a valid URL or UUID"
     if UUID is None and URL is None:
         return "You must enter a valid URL or UUID"
+    # Will default to UUID if a URL and UUID are given.
 
     # get uuid type
     type_params = {"fields": "short_code", "uuid": UUID}
@@ -18,6 +19,7 @@ def get_record(UUID: str = None, URL: str = None) -> dict:
         return f"An error occurred While trying to get the short code of UUID {UUID}. This may mean the UUID does not exist. Error: {response}"
 
     try:
+        # converts uuid short code into a callable object type
         short_code = response["results"][0]["short_code"]
     except IndexError:
         return f"Failed to get short code of UUID {UUID}. This may mean the UUID does not exist."
@@ -33,6 +35,7 @@ def get_record(UUID: str = None, URL: str = None) -> dict:
     if information["results"] == []:
         return f"Failed to get data for UUID {UUID}. Reaching this far means the UUID exists within referencables and that was called successfully, so this is highly irregular (perhaps the API shut down between calls?)"
 
+    # strips out empty fields from the response
     for k, v in information["results"][0].items():
         if v not in ("", None, []):
             result[k] = v
