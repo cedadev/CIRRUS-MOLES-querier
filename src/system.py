@@ -1,6 +1,6 @@
 import yaml
 
-
+# System prompt. Here because it is a large bit of text and it made it hard to read main.py
 def get_system_prompt():
     sys_prompt = f"""
 You are CIRRUS.
@@ -51,6 +51,7 @@ repeated for each URL
     return sys_prompt
 
 
+# Config loader to make sure the config is in a good condition so the code does not crash later.
 def load_config():
     filepath = "etc/config.yml"
     try:

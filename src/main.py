@@ -17,7 +17,9 @@ from system import get_system_prompt, load_config
 
 logging.basicConfig(level=logging.INFO)
 
-
+# Determine before LLM start if ollama is on and if the API is on or not
+# This is useful because of the number of times I tried writing something to the LLM only for it to crash saying it can't connect
+# This function is used in the UI file
 def heartbeat():
     heartbeat = check_services()
     if False in heartbeat.values():
@@ -31,6 +33,7 @@ def heartbeat():
 
 
 def setup_agent():
+    # loads the config to get the model name
     try:
         config = load_config()
     except Exception as e:
@@ -65,11 +68,13 @@ def setup_agent():
         ]
     )
 
+    # Attach tools using the langchain_classic import as I found that one worked easiest (might be a better version now though)
     agent = create_tool_calling_agent(llm, tools, prompt)
     agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
     return agent_executor
 
 
+# The LLM terminal interface
 def chat_loop(agent_executor, history):
     while True:
         user_input = input(
@@ -93,6 +98,7 @@ def chat_loop(agent_executor, history):
             logging.error("\nAn error occurred: %s", e)
 
 
+# The pipeline to run all the functions in order to set it all up.
 if __name__ == "__main__":
     # check if systems are online
     heartbeat()
