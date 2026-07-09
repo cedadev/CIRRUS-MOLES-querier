@@ -3,6 +3,7 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy.dialects.sqlite import JSON
 from sqlalchemy.schema import MetaData
 
+# Where the file should create the database (which is why this file needs to be ran from src)
 DATABASE_URL = "sqlite:///./graphical_interface/chainlit.db"
 
 engine = create_engine(DATABASE_URL)

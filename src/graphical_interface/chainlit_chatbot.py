@@ -23,6 +23,7 @@ config = load_config()
 
 @cl.data_layer
 def get_data_layer():
+    # The history database
     db_path = os.path.abspath("./graphical_interface/chainlit.db")
     return SQLAlchemyDataLayer(conninfo=f"sqlite+aiosqlite:///{db_path}")
 
@@ -62,7 +63,7 @@ async def main(message: cl.Message):
     # Retrieve current session history
     history = cl.user_session.get("history", [])
 
-    # Placeholder message
+    # Placeholder message (so it looks like the LLM is doing something)
     msg = cl.Message(content="")
     await msg.send()
 
@@ -74,7 +75,7 @@ async def main(message: cl.Message):
 
         output_text = response["output"]
 
-        # Add history
+        # Add history (similar to main.py)
         history.append(HumanMessage(content=message.content))
         history.append(AIMessage(content=output_text))
         cl.user_session.set("history", history)
@@ -84,6 +85,7 @@ async def main(message: cl.Message):
         await msg.update()
 
     except Exception as e:
+        # Log error and replace placeholder message with the error message
         logging.error("An error occurred during agent execution: %s", e)
         msg.content = f"An error occurred: {str(e)}"
         await msg.update()
