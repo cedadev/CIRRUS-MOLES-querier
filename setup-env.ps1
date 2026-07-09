@@ -4,6 +4,7 @@
 if (-not (Test-Path "CIRRUS_venv")) {
     Write-Host "Creating virtual environment..."
     if (Get-Command py -ErrorAction SilentlyContinue) {
+        # Must be python 3.12 or 3.13 for requirements to run
         if (py -3.13 --version 2>$null) {
             py -3.13 -m venv CIRRUS_venv
         }

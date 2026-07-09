@@ -2,6 +2,7 @@
 
 # Creates the venv if it doesn't exist
 if [ ! -d "CIRRUS_venv" ]; then
+    # Must be python 3.12 or 3.13 for requirements to run (not checked here)
     echo "Creating virtual environment..."
     python3 -m venv CIRRUS_venv
 else

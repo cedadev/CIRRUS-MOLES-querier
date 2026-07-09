@@ -1,5 +1,6 @@
 #!/usr/bin/env pwsh
 
+# Sets up the environment
 . .\setup-env.ps1
 
 $ENV_FILE = "src\.env"
@@ -9,6 +10,7 @@ if ((Test-Path $ENV_FILE) -and (Select-String -Path $ENV_FILE -Pattern "CHAINLIT
     Write-Host "Skipping key creation (already exists)"
 }
 else {
+    # If not, creates the file and populates it
     Write-Host "Generating Chainlit key into .env"
 
     # Get only the second line of output from chainlit create-secret
@@ -21,7 +23,7 @@ else {
     Add-Content -Path $ENV_FILE -Value $secret
 }
 
-# Change to src directory
+# Changing path for the db to run properly
 Set-Location src
 
 # Check if SQLite database exists
@@ -31,6 +33,7 @@ if (Test-Path $DB_FILE) {
     Write-Host "Skipping DB creation (already exists)"
 }
 else {
+    # If not, run the db creation file
     Write-Host "Creating Chainlit database"
 
     if (Test-Path "graphical_interface\init_sqlite_db.py") {

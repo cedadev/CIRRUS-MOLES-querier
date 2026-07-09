@@ -1,7 +1,9 @@
 #!/bin/bash
 
+# the GWS with the ollama version that can run gemma4
 OLLAMA_DIR=/gws/ssde/j25b/eds_ai/high5/misc/new-ollama-dir
 
+# Model name and context length
 model=${1:-gemma4:31b}
 context_size=48000
 
