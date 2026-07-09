@@ -4,6 +4,7 @@ from tool_functionality.get_record import get_record
 from tool_functionality.search_redirect import search_redirect
 from tool_functionality.heartbeat_monitor import check_services
 
+# Langchain wrapper file
 
 @langchain_tool
 def search_catalogue_tool(
