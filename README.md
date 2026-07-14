@@ -2,7 +2,7 @@
 
 copy `src/etc/config.yml.example` to `src/etc/config.yml` then change this file depending on how you will run the interface (more information below)
 
-**To use the system on JASMIN you will need the Additional Services : orchid**
+**To use the system on JASMIN you will need the Additional Services : orchid**\
 check which services you have access to: https://accounts.jasmin.ac.uk/services/additional_services/?page=1
 
 
