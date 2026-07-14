@@ -3,6 +3,8 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy.dialects.sqlite import JSON
 from sqlalchemy.schema import MetaData
 
+# Adapted from https://docs.chainlit.io/data-layers/sqlalchemy
+
 # Where the file should create the database (which is why this file needs to be ran from src)
 DATABASE_URL = "sqlite:///./graphical_interface/chainlit.db"
 

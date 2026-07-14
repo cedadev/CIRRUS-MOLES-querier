@@ -6,6 +6,8 @@ design and implement a Large Language Model with tool capability using local mod
 
 Codename CIRRUS (CEDA Intelligent Retrieval and Research User System) for ease of communication.
 
+The Query response accuracy spreadsheet is included in the documentation file.
+
 </br>
 
 ### Project Goals:
@@ -133,7 +135,17 @@ It has been made intentionally easy for this project to be connected to an API L
 
 
 ## diagram explanations
+### Structure_diagram
+A user message is created and is sent to either the User interface or the terminal interface. Both are sent to the LLM and given a chat history. For the terminal interface, it uses just a list but for the UI interface it uses a database which stores user and the user chats (as the UI is meant to be ran as a server, but for testing purposes, it is ran per user). The LLM can then choose to call tools which then call external services and then produce a response.
 
+### Module_dependency_diagram
+This diagram shows each file and the functions within. The functions are either public (marked with a +) in which they are used in other files, or private (marked with a -) where they are only used in the same file. chainlit_chatbot.py has no markings as they are all used internally. A query can either be sent directly to main, ignoring the chainlit file, or can be sent to the UI via the chainlit chatbot.
+
+### Script_setup_diagram
+A simple explanation of the setup scripts. start-ui depends on setup-env and setup env can be used on its own for the basic terminal interface or development.
+
+### Sequence_diagram
+This diagram shows a user query that requires multiple tool calls to the MOLES API. Invoke(prompt, history) is used for the terminal and UI interfaces.
 
 
 </br></br></br>
@@ -141,11 +153,13 @@ It has been made intentionally easy for this project to be connected to an API L
 
 # Troubleshooting
 ## LLMs to use
-This project will use the Gemma4:31b model on JASMIN (this can be exchanged for the llama3.1:70b model, but this project was built for gemma).
+This project will use the Gemma4:31b model on JASMIN (this can be exchanged for the llama3.1:70b model (with some difficulty), but this project was built for gemma).
 However, it is unlikely you will be able to run the 31b Gemma model at home.
 
 I have found that the 26b parameter model works well also and I was able to run this locally on my GPU.
 If you do not have a porwerful GPU or want ot run a different model, make sure the model says "tools" in the tags so that it can use the langchain tools (or it will give you a warning when trying to query it)
+
+To use the llama3.1:70b model, you need to change the run-ollama script to use the old llama location from the high5 project and change the config file to use that llama model.
 
 
 ## JASMIN UI portforwarding
