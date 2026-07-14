@@ -6,6 +6,7 @@ from tool_functionality.heartbeat_monitor import check_services
 
 # Langchain wrapper file
 
+
 @langchain_tool
 def search_catalogue_tool(
     object_type: str,

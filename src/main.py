@@ -17,6 +17,7 @@ from system import get_system_prompt, load_config
 
 logging.basicConfig(level=logging.INFO)
 
+
 # Determine before LLM start if ollama is on and if the API is on or not
 # This is useful because of the number of times I tried writing something to the LLM only for it to crash saying it can't connect
 # This function is used in the UI file

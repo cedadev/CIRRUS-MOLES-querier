@@ -12,6 +12,7 @@ from langchain.messages import HumanMessage, AIMessage
 logging.basicConfig(level=logging.INFO)
 
 # Global variables
+# (used for future authentication, currently unused)
 pw = os.environ.get("USER_PW", "UNmatCHEd")
 
 
@@ -31,6 +32,7 @@ def get_data_layer():
 @cl.password_auth_callback
 def auth_callback(username: str, password: str):
     # Can easily be expanded to add a hosted app.
+    # change ui type location to be server and add an else for multi user authentication
     if config["UI-type"]["location"] == "local":
         return cl.User(
             identifier=username,

@@ -1,5 +1,6 @@
 import yaml
 
+
 # System prompt. Here because it is a large bit of text and it made it hard to read main.py
 def get_system_prompt():
     sys_prompt = f"""
@@ -86,6 +87,7 @@ def load_config():
             )
     else:
         if "LOCAL_LLM" not in llm_section or not llm_section["LOCAL_LLM"]:
+            # uses an f string so that if other host types are added, the message will be accurate (though LOCAL_LLM will need to change or be renamed)
             raise ValueError(
                 f"Host is set to '{host_type}', but 'LOCAL_LLM' model is missing or empty."
             )
