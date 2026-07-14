@@ -6,7 +6,7 @@ copy `src/etc/config.yml.example` to `src/etc/config.yml` then change this file 
 check which services you have access to: https://accounts.jasmin.ac.uk/services/additional_services/?page=1
 
 
-# Terminal conversation version
+# Terminal interface version
 
 ## JASMIN
 
@@ -72,7 +72,7 @@ python main.py
 
 
 
-# UI version
+# GUI interface version
 
 When you get access to the UI page, login with the below credentials (it doesn't matter what username or password you use, as long as it is consistent)\
 username = test\
