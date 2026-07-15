@@ -5,7 +5,7 @@ OLLAMA_DIR=/gws/ssde/j25b/eds_ai/high5/misc/new-ollama-dir
 
 # Model name and context length
 model=${1:-gemma4:31b}
-context_size=48000
+context_size=64000
 
 wait=30
 echo "[INFO] Running ollama with model: $model"

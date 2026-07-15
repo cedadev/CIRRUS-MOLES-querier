@@ -33,7 +33,7 @@ def search_catalogue_tool(
     Search the MOLES metadata catalogue for observations (could be referred to as datasets), computations, instruments, projects, platforms, observation collections (could be referred to as dataset collections)
 
     Use this tool when a user is searching for record information
-    within the CEDA/MOLES catalogue. The tool supports heavy filtering and returns paginated results (10 per page).
+    within the catalogue. The tool supports heavy filtering and returns paginated results (10 per page).
     Either use a parameter and fill it in properly, or do not include it.
     Running this tool without any parameters to filter by will not give you a useful result most of the time.
     Using some parameters with certain object_types will ignore those parameters as they are not within the API response for that type.
@@ -64,7 +64,7 @@ def search_catalogue_tool(
 
     Returns:
         dict: A dictionary containing the paginated and filtered API response with the full number of records as metadata with a verified url_list
-        linking directly to the CEDA catalogue page.
+        linking directly to the CEDA archive webpage.
     """
 
     return search_catalogue(
@@ -93,7 +93,7 @@ def search_catalogue_tool(
 @langchain_tool
 def get_record_tool(UUID: str = None, URL: str = None) -> dict:
     """
-    Get the complete metadata record for a CEDA catalogue entry.
+    Get the complete metadata record for a catalogue entry.
 
     Use this tool when the user provides a record UUID, a catalogue URL or wants more information about a dataset returned by another tool and
     wants detailed information about that specific record. The tool identifies
@@ -120,7 +120,8 @@ def search_redirect_tool(query: str) -> str:
 
     This tool does not perform a search. It only generates a URL that the user can open to view search results.
     Use this tool if a direct search fails or if a user provides an old, ambiguous or out of scope (such as help pages) query that needs resolving.
-    This will search the custom Google search engine across all CEDA searches.
+    This will search the custom Google search engine across all relevant search locations.
+    Do not use 'CEDA' in the search term as it is unnecessary and may skew results. Only use it if the user specifically mentioned it.
 
     You should also give a brief explanation for why you are redirecting the user.
 
