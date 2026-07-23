@@ -1,4 +1,4 @@
-from .common import call_api, API_TYPES
+from .common import call_api, check_link, API_TYPES
 
 
 def get_record(UUID: str = None, URL: str = None) -> dict:
@@ -39,5 +39,13 @@ def get_record(UUID: str = None, URL: str = None) -> dict:
     for k, v in information["results"][0].items():
         if v not in ("", None, []):
             result[k] = v
+    
+    url_list = []
+    url = f"https://catalogue.ceda.ac.uk/uuid/{UUID}/"
+    confirmation = check_link(url)
+    if confirmation == "responsive":
+        url_list.append(url)
+    else:
+        url_list.append(f"Failed to create link for UUID: {UUID}")
 
-    return result
+    return {"result": result, "verified_url": url_list}
