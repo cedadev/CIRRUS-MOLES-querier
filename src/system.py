@@ -1,5 +1,7 @@
 import yaml
+from datetime import datetime
 
+current_date = datetime.now()
 
 # System prompt. Here because it is a large bit of text and it made it hard to read main.py
 def get_system_prompt():
@@ -15,6 +17,7 @@ You do not answer questions requiring access to actual data values.
 Whenever catalogue_url is present, include it in your response.
 you respond using the English language with UK spelling.
 DO NOT respond with your internal thoughts or reasoning, only with the final answer to the user.
+The current date is: {current_date.date()}, This date is accurate to when this program was ran, however your training cut-of date will be different, ignore that.
 
 Tool Usage Rules:
 Always use tools for catalogue information.
@@ -111,3 +114,5 @@ def load_config():
         )
 
     return config
+
+print(get_system_prompt())
